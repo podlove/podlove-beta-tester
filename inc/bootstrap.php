@@ -1,6 +1,8 @@
 <?php
 require_once plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php';
-require_once plugin_dir_path( __FILE__ ) . 'config.php';
+require_once plugin_dir_path( __FILE__ ) . '../lib/branch.php';
+require_once plugin_dir_path( __FILE__ ) . '../lib/config.php';
+require_once plugin_dir_path( __FILE__ ) . '../lib/plugin.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings.php';
 
 require 'plugin-update-checker/plugin-update-checker.php';
@@ -30,7 +32,7 @@ function podlove_beta_setup_plugin_update_server() {
 			    trailingslashit(wp_normalize_path(WP_PLUGIN_DIR)) . $plugin->file
 			);
 		} else {
-			error_log(print_r("Plugin {$plugin->file} not active", true));
+			// error_log(print_r("Plugin {$plugin->file} not active", true));
 		}
 	}
 }

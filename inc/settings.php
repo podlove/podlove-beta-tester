@@ -30,7 +30,7 @@ function add_menu_entry() {
  * Register Admin CSS Stylesheet
  */
 function register_admin_styles() {
-	wp_register_style('podlove-beta-admin-style', plugins_url('css/admin.css', __FILE__));
+	wp_register_style('podlove-beta-admin-style', plugins_url('../css/admin.css', __FILE__));
 }
 
 function add_settings_link_to_plugin_meta($plugin_meta, $plugin_file, $plugin_data, $status) {

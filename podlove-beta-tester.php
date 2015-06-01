@@ -19,4 +19,4 @@ if ( ! $correct_php_version ) {
 	exit;
 }
 
-require_once 'plugin.php';
+require_once 'inc/bootstrap.php';
