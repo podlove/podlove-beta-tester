@@ -45,8 +45,9 @@ function add_settings_link_to_plugin_meta($plugin_meta, $plugin_file, $plugin_da
 
 function handle_settings_request() {
 	$action = filter_input(INPUT_GET, 'action');
+	$plugin = filter_input(INPUT_GET, 'plugin');
 
-	if (!$action)
+	if (!$action || !$plugin)
 		return;
 
 	switch ($action) {
@@ -54,51 +55,74 @@ function handle_settings_request() {
 			if (!$branch = filter_input(INPUT_GET, 'branch'))
 				return;
 
-			// @todo validate branch
-			update_option('podlove_beta_branch', $branch);
+			$next_branch = get_option('podlove_beta_next_branch', []);
+			$next_branch[$plugin] = $branch;
+			update_option('podlove_beta_next_branch', $next_branch);
 			break;
 		case 'leave_branch':
-			delete_option('podlove_beta_branch');
+			$next_branch = get_option('podlove_beta_next_branch', []);
+			unset($next_branch[$plugin]);
+			update_option('podlove_beta_next_branch', $next_branch);
 			break;
 		default:
 			return;
 	}
+
+	// clear plugon-update cache after changing branches
+	delete_site_transient('update_plugins');
 
 	wp_safe_redirect(settings_url());
 }
 
 function settings_page() {
 	$config = new Config;
-	$current_branch = get_option('podlove_beta_branch');
+	$next_branch    = get_option('podlove_beta_next_branch');
+	$current_branch = get_option('podlove_beta_current_branch');
 
 	?>
 	<div class="wrap">
 		<h2><?php echo __("Podlove Beta Tester", 'podlove-beta-tester') ?></h2>	
 
 		<?php foreach ($config->plugins() as $plugin): ?>
+			<?php
+			$next_plugin_branch    = isset($next_branch[$plugin->slug])    ? $next_branch[$plugin->slug]    : NULL;
+			$current_plugin_branch = isset($current_branch[$plugin->slug]) ? $current_branch[$plugin->slug] : NULL;
+			?>
 			<div class="card">
 				<h3><?php echo $plugin->title ?></h3>
-				<div class="branch-status <?php echo empty($current_branch) ? 'active' : '' ?>">
+				<div class="branch-status <?php echo $next_plugin_branch ? 'active' : '' ?>">
 					<p>
 						<em>
-							<?php if ($current_branch): ?>
-								Tracking development branch "<?php echo $current_branch ?>"
+							<?php if ($next_plugin_branch): ?>
+								Tracking development branch <strong>"<?php echo $next_plugin_branch ?>"</strong>
 							<?php else: ?>
 								You are getting stable updates via WordPress Plugin Directory.
 							<?php endif ?>
 						</em>
-					</p>	
+					</p>
 				</div>
+				<?php if ($current_plugin_branch != $next_plugin_branch): ?>
+					<div class="branch-status update-notice">
+						<p>
+							<?php if (!empty($next_plugin_branch)): ?>
+								You switched the version but you still need to download it. <a href="<?php echo esc_url( self_admin_url( 'update-core.php' ) ); ?>">Go check for Updates</a>
+							<?php else: ?>
+								You switched the version back to stable but you might not see an update for it (if your latest beta version number is higher than the current stable version number). 
+								The safest way is to download the stable plugin and override the beta plugin files.
+							<?php endif ?>
+						</p>
+					</div>
+				<?php endif ?>
 				<?php foreach ($plugin->branches() as $branch): ?>
-					<?php $is_active = $branch->title === $current_branch; ?>
+					<?php $is_active = $branch->title === $next_plugin_branch; ?>
 					<hr/>
 					<section class="branch <?php echo $is_active ? 'active' : '' ?>">
 						<header>
 							<h4><?php echo $branch->title ?></h4>
 							<?php if ($is_active): ?>
-								<?php echo leave_branch_link() ?>
+								<?php echo leave_branch_link($plugin->slug) ?>
 							<?php else: ?>
-								<?php echo switch_branch_link($branch->title) ?>
+								<?php echo switch_branch_link($plugin->slug, $branch->title) ?>
 							<?php endif ?>
 						</header>
 						<div class="clear"></div>
@@ -119,10 +143,10 @@ function settings_page() {
  * 
  * @return string
  */
-function leave_branch_link() {
+function leave_branch_link($plugin) {
 	return sprintf(
 		'<a href="%s">%s</a>', 
-		leave_branch_url(), 
+		leave_branch_url($plugin), 
 		__('Switch back to stable Version', 'podlove-beta-tester')
 	);
 }
@@ -132,8 +156,8 @@ function leave_branch_link() {
  * 
  * @return string
  */
-function leave_branch_url() {
-	return add_query_arg(['action' => 'leave_branch'], settings_url());
+function leave_branch_url($plugin) {
+	return add_query_arg(['action' => 'leave_branch', 'plugin' => $plugin], settings_url());
 }
 
 /**
@@ -142,10 +166,10 @@ function leave_branch_url() {
  * @param string $branch
  * @return string
  */
-function switch_branch_link($branch) {
+function switch_branch_link($plugin, $branch) {
 	return sprintf(
 		'<a href="%s">%s</a>', 
-		switch_branch_url($branch), 
+		switch_branch_url($plugin, $branch), 
 		__('Switch to this Version', 'podlove-beta-tester')
 	);
 }
@@ -156,8 +180,8 @@ function switch_branch_link($branch) {
  * @param string $branch
  * @return string
  */
-function switch_branch_url($branch) {
-	return add_query_arg(['action' => 'switch_branch', 'branch' => $branch], settings_url());
+function switch_branch_url($plugin, $branch) {
+	return add_query_arg(['action' => 'switch_branch', 'plugin' => $plugin, 'branch' => $branch], settings_url());
 }
 
 /**

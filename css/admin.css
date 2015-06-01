@@ -12,6 +12,11 @@
 	background: rgba(122, 208, 57, 0.07);
 }
 
+.branch-status.update-notice {
+	border-left: 3px solid #ffba00;
+	background: rgba(246, 184, 50, 0.07);
+}
+
 .branch header h4 {
 	margin: 0;
 	float: left;

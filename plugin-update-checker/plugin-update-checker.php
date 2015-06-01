@@ -299,8 +299,8 @@ class PluginUpdateChecker_2_0 {
 			if ( $this->debugMode ) {
 				trigger_error(
 					sprintf(
-						"Can't to read the plugin header for '%s'. The file does not exist.",
-						$this->pluginFile
+						"Can't to read the plugin header for '%s'. The file does not exist. (%s)",
+						$this->pluginFile, $this->pluginAbsolutePath
 					),
 					E_USER_WARNING
 				);
@@ -503,6 +503,7 @@ class PluginUpdateChecker_2_0 {
 
 			$wpUpdate = $update->toWpFormat();
 			$pluginFile = $this->pluginFile;
+			// error_log(print_r($wpUpdate, true));
 
 			if ( $this->isMuPlugin() ) {
 				//WP does not support automatic update installation for mu-plugins, but we can still display a notice.
@@ -652,7 +653,27 @@ class PluginUpdateChecker_2_0 {
 			$update = $state->update;
 			//Check if the update is actually newer than the currently installed version.
 			$installedVersion = $this->getInstalledVersion();
-			if ( ($installedVersion !== null) && version_compare($update->version, $installedVersion, '>') ){
+
+			$slug = \Podlove\Beta\Config::plugin_slug_for_filename($update->filename);
+
+			$next_branch    = get_option('podlove_beta_next_branch')[$slug];
+			$current_branch = get_option('podlove_beta_current_branch')[$slug];
+
+			$is_version_higher   = version_compare($update->version, $installedVersion, '>');
+			$is_different_branch = $next_branch != $current_branch;
+
+			$should_update = ($installedVersion !== null) && ($is_version_higher || $is_different_branch);
+
+			error_log(print_r([
+				'state' => $state, 
+				'installed_version' => $installedVersion,
+				'slug' => $slug,
+				'next_branch' => $next_branch,
+				'current_branch' => $current_branch,
+				'should_update' => $should_update ? 'yes' : 'no'
+			], true));
+
+			if ($should_update) {
 				$update->filename = $this->pluginFile;
 				return $update;
 			}
