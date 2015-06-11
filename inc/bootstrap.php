@@ -15,13 +15,16 @@ if (!in_array(filter_input(INPUT_GET, 'action'), ['switch_branch', 'leave_branch
 }
 
 // always update beta plugin through itself
-add_filter('option_podlove_beta_next_branch', function($next_branch) {
+add_filter('option_podlove_beta_next_branch', 'podlove_add_beta_tester_branch_to_config');
+add_filter('option_podlove_beta_current_branch', 'podlove_add_beta_tester_branch_to_config');
 
-	if (!isset($next_branch['podlove-beta-tester']))
-		$next_branch['podlove-beta-tester'] = 'master';
+function podlove_add_beta_tester_branch_to_config($branches) {
 
-	return $next_branch;
-});
+	if (!isset($branches['podlove-beta-tester']))
+		$branches['podlove-beta-tester'] = 'master';
+
+	return $branches;
+}
 
 /**
  * Setup plugin update Server
