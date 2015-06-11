@@ -1,0 +1,11 @@
+sudo: false
+language: php
+php:
+  - 5.4
+after_success:
+  - make build
+  # add build number to version
+  - sed -i.bak "s/\(Version:.*\)/\1.build$TRAVIS_BUILD_NUMBER\/$TRAVIS_BRANCH/" dist/podlove-beta-tester.php
+  - rm -f dist/podlove-beta-tester.php.bak
+  - zip -r latest.zip dist
+  - curl --ftp-create-dirs -T latest.zip -u $FTP_USER:$FTP_PASSWORD ftp://eric.co.de/files/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/
