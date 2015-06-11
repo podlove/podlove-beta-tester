@@ -7,6 +7,14 @@ class Config {
 	{
 		return [
 			'plugins' => [
+				'podlove-beta-tester' => [
+					'hidden' => true,
+					'title' => 'Podlove Beta Tester',
+					'file'  => 'podlove-beta-tester/podlove-beta-tester.php',
+					'branches' => [
+						'master' => []
+					]
+				],
 				'plugin-deployment-demo' => [
 					'title' => 'Plugin Deployment Demo',
 					'file'  => 'plugin-deployment-demo/plugin-deployment-demo.php',

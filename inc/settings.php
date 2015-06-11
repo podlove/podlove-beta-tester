@@ -91,6 +91,10 @@ function settings_page() {
 
 		<?php foreach ($config->plugins() as $plugin): ?>
 			<?php
+			
+			if ($plugin->hidden)
+				continue;
+
 			$next_plugin_branch    = isset($next_branch[$plugin->slug])    ? $next_branch[$plugin->slug]    : NULL;
 			$current_plugin_branch = isset($current_branch[$plugin->slug]) ? $current_branch[$plugin->slug] : NULL;
 			?>

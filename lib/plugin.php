@@ -6,6 +6,7 @@ class Plugin {
 	public $slug;
 	public $title;
 	public $file;
+	public $hidden;
 
 	private $branches;
 
@@ -13,6 +14,7 @@ class Plugin {
 		$this->slug  = $slug;
 		$this->title = $data['title'];
 		$this->file  = $data['file'];
+		$this->hidden = isset($data['hidden']) ? (bool) $data['hidden'] : false;
 
 		$this->branches = [];
 		foreach ($data['branches'] as $branch_slug => $branch) {
