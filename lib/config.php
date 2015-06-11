@@ -15,20 +15,6 @@ class Config {
 						'master' => []
 					]
 				],
-				'plugin-deployment-demo' => [
-					'title' => 'Plugin Deployment Demo',
-					'file'  => 'plugin-deployment-demo/plugin-deployment-demo.php',
-					'branches' => [
-						'development' => [
-							'state'       => 'stable',
-							'description' => 'Stable development stuffz.'
-						],
-						'experiment' => [
-							'state'       => 'alpha',
-							'description' => 'Watch ou—*\b00m/*'
-						]
-					]
-				],
 				'podlove-podcasting-plugin-for-wordpress' => [
 					'title' => 'Podlove Podcast Publisher',
 					'file'  => 'podlove-podcasting-plugin-for-wordpress/podlove.php',
@@ -39,6 +25,20 @@ class Config {
 						]
 					]
 				]
+				// 'plugin-deployment-demo' => [
+				// 	'title' => 'Plugin Deployment Demo',
+				// 	'file'  => 'plugin-deployment-demo/plugin-deployment-demo.php',
+				// 	'branches' => [
+				// 		'development' => [
+				// 			'state'       => 'stable',
+				// 			'description' => 'Stable development stuffz.'
+				// 		],
+				// 		'experiment' => [
+				// 			'state'       => 'alpha',
+				// 			'description' => 'Watch ou—*\b00m/*'
+				// 		]
+				// 	]
+				// ]
 			]
 		];
 	}
