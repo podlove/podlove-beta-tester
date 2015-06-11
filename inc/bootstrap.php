@@ -12,6 +12,17 @@ add_action('upgrader_process_complete', 'podlove_beta_update_plugin_branch_state
 // don't activate while switching branches
 if (!in_array(filter_input(INPUT_GET, 'action'), ['switch_branch', 'leave_branch'])) {
 	add_action('plugins_loaded', 'podlove_beta_setup_plugin_update_server');
+	add_action('plugins_loaded', 'podlove_beta_setup_beta_plugin_update_server');
+}
+
+/**
+ * Setup update server for the beta plugin itself.
+ */
+function podlove_beta_setup_beta_plugin_update_server() {
+	PucFactory::buildUpdateChecker(
+	    'http://eric.co.de/releases/?action=get_metadata&slug=podlove-beta-tester&branch=master',
+	    trailingslashit(wp_normalize_path(WP_PLUGIN_DIR)) . 'podlove-beta-tester/podlove-beta-tester.php'
+	);
 }
 
 /**

@@ -25,16 +25,9 @@ class Config {
 					'title' => 'Podlove Podcast Publisher',
 					'file'  => 'podlove-podcasting-plugin-for-wordpress/podlove.php',
 					'branches' => [
-						'release-2-1-4' => [
-							'state' => 'stable',
-							'description' => 'Bugfixes for 2.1 Release'
-						],
-						'release-2-2-0' => [
+						'release-2-3-0' => [
 							'state' => 'alpha',
-							'description' => 'Working on: Image caching & resizing'
-						],
-						'experimental-dist' => [
-							'state' => 'alpha'
+							'description' => '2.3 Release. See <a href="https://trello.com/b/JhpYYzpE/podlove-publisher-development">Trello</a> for development status.'
 						]
 					]
 				]
