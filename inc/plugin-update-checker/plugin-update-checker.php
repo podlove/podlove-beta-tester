@@ -446,6 +446,7 @@ class PluginUpdateChecker_2_0 {
 	 * clear the update cache.
 	 */
 	public function resetUpdateState() {
+		delete_site_transient('update_plugins');
 		delete_site_option($this->optionName);
 	}
 	
@@ -503,7 +504,6 @@ class PluginUpdateChecker_2_0 {
 
 			$wpUpdate = $update->toWpFormat();
 			$pluginFile = $this->pluginFile;
-			// error_log(print_r($wpUpdate, true));
 
 			if ( $this->isMuPlugin() ) {
 				//WP does not support automatic update installation for mu-plugins, but we can still display a notice.
@@ -663,15 +663,6 @@ class PluginUpdateChecker_2_0 {
 			$is_different_branch = $next_branch != $current_branch;
 
 			$should_update = ($installedVersion !== null) && ($is_version_higher || $is_different_branch);
-
-			error_log(print_r([
-				'state' => $state, 
-				'installed_version' => $installedVersion,
-				'slug' => $slug,
-				'next_branch' => $next_branch,
-				'current_branch' => $current_branch,
-				'should_update' => $should_update ? 'yes' : 'no'
-			], true));
 
 			if ($should_update) {
 				$update->filename = $this->pluginFile;

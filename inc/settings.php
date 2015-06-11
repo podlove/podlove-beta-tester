@@ -44,6 +44,7 @@ function add_settings_link_to_plugin_meta($plugin_meta, $plugin_file, $plugin_da
 }
 
 function handle_settings_request() {
+
 	$action = filter_input(INPUT_GET, 'action');
 	$plugin = filter_input(INPUT_GET, 'plugin');
 
@@ -68,7 +69,12 @@ function handle_settings_request() {
 			return;
 	}
 
-	// clear plugon-update cache after changing branches
+	// clear plugin-update cache after changing branches
+	$config = new \Podlove\Beta\Config;
+	foreach ($config->plugins() as $plugin) {
+		delete_site_option('external_updates-' . $plugin->slug);
+	}
+
 	delete_site_transient('update_plugins');
 
 	wp_safe_redirect(settings_url());

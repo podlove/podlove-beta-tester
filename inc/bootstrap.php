@@ -8,7 +8,11 @@ require_once plugin_dir_path( __FILE__ ) . 'settings.php';
 require 'plugin-update-checker/plugin-update-checker.php';
 
 add_action('upgrader_process_complete', 'podlove_beta_update_plugin_branch_state', 10, 2);
-add_action('plugins_loaded', 'podlove_beta_setup_plugin_update_server');
+
+// don't activate while switching branches
+if (!in_array(filter_input(INPUT_GET, 'action'), ['switch_branch', 'leave_branch'])) {
+	add_action('plugins_loaded', 'podlove_beta_setup_plugin_update_server');
+}
 
 /**
  * Setup plugin update Server
@@ -16,19 +20,23 @@ add_action('plugins_loaded', 'podlove_beta_setup_plugin_update_server');
  * Using "Plugin Update Checker" API, change update server for active beta plugins.
  */
 function podlove_beta_setup_plugin_update_server() {
-	
+
 	$config = new \Podlove\Beta\Config;
 	$next_branch = get_option('podlove_beta_next_branch', []);
 
 	foreach ($config->plugins() as $plugin) {
 		$branch = isset($next_branch[$plugin->slug]) ? $next_branch[$plugin->slug] : NULL;
+		
 		if (is_plugin_active($plugin->file) && $branch) {
+			
+			$update_url = sprintf(
+		    	'http://eric.co.de/releases/?action=get_metadata&slug=%s&branch=%s',
+		    	$plugin->slug,
+		    	$branch
+		    );
+
 			PucFactory::buildUpdateChecker(
-			    sprintf(
-			    	'http://eric.co.de/releases/?action=get_metadata&slug=%s&branch=%s',
-			    	$plugin->slug,
-			    	$branch
-			    ),
+			    $update_url,
 			    trailingslashit(wp_normalize_path(WP_PLUGIN_DIR)) . $plugin->file
 			);
 		} else {
