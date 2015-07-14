@@ -32,6 +32,11 @@ function podlove_add_beta_tester_branch_to_config($branches) {
  * Using "Plugin Update Checker" API, change update server for active beta plugins.
  */
 function podlove_beta_setup_plugin_update_server() {
+	
+	if (!is_admin())
+		return;
+
+	include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
 	$config = new \Podlove\Beta\Config;
 	$next_branch = get_option('podlove_beta_next_branch', []);
@@ -69,6 +74,9 @@ function podlove_beta_update_plugin_branch_state($upgrader, $params) {
 
 	$current_branch = get_option('podlove_beta_current_branch', []);
 	$next_branch    = get_option('podlove_beta_next_branch', []);
+
+	if (!isset($params['plugins']) || !is_array($params['plugins']))
+		return;
 
 	foreach ($params['plugins'] as $plugin_file) {
 		if ($slug = \Podlove\Beta\Config::plugin_slug_for_filename($plugin_file)) {

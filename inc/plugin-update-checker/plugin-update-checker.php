@@ -656,8 +656,11 @@ class PluginUpdateChecker_2_0 {
 
 			$slug = \Podlove\Beta\Config::plugin_slug_for_filename($update->filename);
 
-			$next_branch    = get_option('podlove_beta_next_branch')[$slug];
-			$current_branch = get_option('podlove_beta_current_branch')[$slug];
+			$next_branches    = get_option('podlove_beta_next_branch');
+			$current_branches = get_option('podlove_beta_current_branch');
+
+			$next_branch    = isset($next_branches[$slug]) ? $next_branches[$slug] : '';
+			$current_branch = isset($current_branches[$slug]) ? $current_branches[$slug] : '';
 
 			$is_version_higher   = version_compare($update->version, $installedVersion, '>');
 			$is_different_branch = $next_branch != $current_branch;
