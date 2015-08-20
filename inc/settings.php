@@ -6,6 +6,9 @@ add_filter('plugin_row_meta', '\Podlove\Beta\add_settings_link_to_plugin_meta', 
 add_action('admin_init', '\Podlove\Beta\handle_settings_request');
 add_action('admin_init', '\Podlove\Beta\register_admin_styles');
 
+add_action('podlove_beta_switch_branch', '\Podlove\Beta\switch_branch', 10, 2);
+add_action('podlove_beta_leave_branch' , '\Podlove\Beta\leave_branch');
+
 /**
  * Add settings menu entry.
  * 
@@ -43,6 +46,29 @@ function add_settings_link_to_plugin_meta($plugin_meta, $plugin_file, $plugin_da
 	return $plugin_meta;
 }
 
+/**
+ * Switch plugin updater to given branch.
+ * 
+ * @param  string $plugin Plugin identifier.
+ * @param  string $branch Branch identifier.
+ */
+function switch_branch($plugin, $branch) {
+	$next_branch = get_option('podlove_beta_next_branch', []);
+	$next_branch[$plugin] = $branch;
+	update_option('podlove_beta_next_branch', $next_branch);
+}
+
+/**
+ * Switch plugin updater to stable releases.
+ * 
+ * @param  string $plugin Plugin identifier.
+ */
+function leave_branch($plugin) {
+	$next_branch = get_option('podlove_beta_next_branch', []);
+	unset($next_branch[$plugin]);
+	update_option('podlove_beta_next_branch', $next_branch);
+}
+
 function handle_settings_request() {
 
 	$action = filter_input(INPUT_GET, 'action');
@@ -53,17 +79,18 @@ function handle_settings_request() {
 
 	switch ($action) {
 		case 'switch_branch':
+
 			if (!$branch = filter_input(INPUT_GET, 'branch'))
 				return;
 
-			$next_branch = get_option('podlove_beta_next_branch', []);
-			$next_branch[$plugin] = $branch;
-			update_option('podlove_beta_next_branch', $next_branch);
+			do_action('podlove_beta_before_switch_branch', $plugin, $branch);
+			do_action('podlove_beta_switch_branch',        $plugin, $branch);
+			do_action('podlove_beta_after_switch_branch',  $plugin, $branch);
 			break;
 		case 'leave_branch':
-			$next_branch = get_option('podlove_beta_next_branch', []);
-			unset($next_branch[$plugin]);
-			update_option('podlove_beta_next_branch', $next_branch);
+			do_action('podlove_beta_before_leave_branch', $plugin);
+			do_action('podlove_beta_leave_branch',        $plugin);
+			do_action('podlove_beta_after_leave_branch',  $plugin);
 			break;
 		default:
 			return;
