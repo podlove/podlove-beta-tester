@@ -66,4 +66,15 @@ class Config {
 		return $plugins;
 	}
 
+	public function plugin($slug)
+	{
+		$plugin_data = self::data()['plugins'];
+
+		if (isset($plugin_data[$slug])) {
+			return new Plugin($slug, $plugin_data[$slug]);
+		}
+
+		return null;
+	}
+
 }

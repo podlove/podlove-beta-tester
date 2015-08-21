@@ -30,4 +30,12 @@ class Plugin {
 		return $this->branches;
 	}
 
+	public function absolute_file_path() {
+		return trailingslashit(wp_normalize_path(WP_PLUGIN_DIR)) . $this->file;
+	}
+
+	public function absolute_dir_path() {
+		return dirname($this->absolute_file_path());
+	}
+
 }

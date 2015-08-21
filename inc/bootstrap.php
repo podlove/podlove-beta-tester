@@ -52,10 +52,7 @@ function podlove_beta_setup_plugin_update_server() {
 		    	$branch
 		    );
 
-			PucFactory::buildUpdateChecker(
-			    $update_url,
-			    trailingslashit(wp_normalize_path(WP_PLUGIN_DIR)) . $plugin->file
-			);
+			PucFactory::buildUpdateChecker($update_url, $plugin->absolute_file_path());
 		} else {
 			// error_log(print_r("Plugin {$plugin->file} not active", true));
 		}

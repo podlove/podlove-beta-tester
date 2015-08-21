@@ -6,6 +6,8 @@ add_filter('plugin_row_meta', '\Podlove\Beta\add_settings_link_to_plugin_meta', 
 add_action('admin_init', '\Podlove\Beta\handle_settings_request');
 add_action('admin_init', '\Podlove\Beta\register_admin_styles');
 
+add_action('podlove_beta_before_switch_branch', '\Podlove\Beta\backup_current_plugin', 10, 2);
+add_action('podlove_beta_after_leave_branch', '\Podlove\Beta\restore_stable_plugin');
 add_action('podlove_beta_switch_branch', '\Podlove\Beta\switch_branch', 10, 2);
 add_action('podlove_beta_leave_branch' , '\Podlove\Beta\leave_branch');
 
@@ -44,6 +46,52 @@ function add_settings_link_to_plugin_meta($plugin_meta, $plugin_file, $plugin_da
 	$plugin_meta[] = '<a href="' . settings_url() . '">' . __('Settings') . '</a>';
 
 	return $plugin_meta;
+}
+
+/**
+ * Backup current plugin so it can be restored later.
+ * 
+ * @param  string $plugin_slug Plugin identifier.
+ * @param  string $branch Branch identifier.
+ */
+function backup_current_plugin($plugin_slug, $branch) {
+	global $wp_filesystem;
+
+	// initialize filesystem if necessary
+	if (!$wp_filesystem)
+		\WP_Filesystem();
+
+	$config     = new \Podlove\Beta\Config;
+	$plugin     = $config->plugin($plugin_slug);
+	$plugin_dir = $plugin->absolute_dir_path();
+
+	$target = ABSPATH . 'wp-content/podlove-beta-backup/' . $plugin_slug;
+	wp_mkdir_p($target);
+	copy_dir($plugin_dir, $target);
+}
+
+/**
+ * Restore stable plugin files if backup is available.
+ * 
+ * @param  string $plugin_slug Plugin identifier.
+ */
+function restore_stable_plugin($plugin_slug) {
+	global $wp_filesystem;
+
+	// initialize filesystem if necessary
+	if (!$wp_filesystem)
+		\WP_Filesystem();
+
+	$config     = new \Podlove\Beta\Config;
+	$plugin     = $config->plugin($plugin_slug);
+	$plugin_dir = $plugin->absolute_dir_path();
+	$backup     = ABSPATH . 'wp-content/podlove-beta-backup/' . $plugin_slug;
+
+	// abort if backup does not exist
+	if (!file_exists($backup))
+		return;
+
+	copy_dir($backup, $plugin_dir);
 }
 
 /**
