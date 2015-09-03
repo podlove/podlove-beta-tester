@@ -47,7 +47,7 @@ function podlove_beta_setup_plugin_update_server() {
 		if (is_plugin_active($plugin->file) && $branch) {
 			
 			$update_url = sprintf(
-		    	'http://eric.co.de/releases/?action=get_metadata&slug=%s&branch=%s',
+		    	'https://eric.co.de/releases/?action=get_metadata&slug=%s&branch=%s',
 		    	$plugin->slug,
 		    	$branch
 		    );
