@@ -18,6 +18,21 @@ if (!in_array(filter_input(INPUT_GET, 'action'), ['switch_branch', 'leave_branch
 add_filter('option_podlove_beta_next_branch', 'podlove_add_beta_tester_branch_to_config');
 add_filter('option_podlove_beta_current_branch', 'podlove_add_beta_tester_branch_to_config');
 
+add_filter('http_request_args', 'podlove_custom_certificates_for_plugin_update_server', 10, 2);
+
+/**
+ * Use custom certificates when contacting eric.co.de Update Server.
+ */
+function podlove_custom_certificates_for_plugin_update_server($args, $url) {
+
+	if (stripos($url, "eric.co.de") === false)
+		return $args;
+
+	$args['sslcertificates'] = trailingslashit(dirname(dirname(__FILE__))) . 'cert/eric.co.de.crt';
+
+	return $args;
+}
+
 function podlove_add_beta_tester_branch_to_config($branches) {
 
 	if (!isset($branches['podlove-beta-tester']))
