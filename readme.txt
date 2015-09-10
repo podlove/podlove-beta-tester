@@ -31,6 +31,10 @@ Once you have the plugin installed and active, it will receive updates normally.
 
 == Changelog ==
 
+= 1.0.1 =
+
+* ship certificates so update server can be verified
+
 = 1.0 =
 
 Release

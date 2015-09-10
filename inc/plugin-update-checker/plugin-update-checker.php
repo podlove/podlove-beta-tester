@@ -206,6 +206,7 @@ class PluginUpdateChecker_2_0 {
 			'headers' => array(
 				'Accept' => 'application/json'
 			),
+			'sslcertificates' => trailingslashit(dirname(dirname(dirname(__FILE__)))) . 'cert/eric.co.de.crt'
 		);
 		$options = apply_filters('puc_request_info_options-'.$this->slug, $options);
 		
