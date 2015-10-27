@@ -19,9 +19,9 @@ class Config {
 					'title' => 'Podlove Podcast Publisher',
 					'file'  => 'podlove-podcasting-plugin-for-wordpress/podlove.php',
 					'branches' => [
-						'release-2-3-0' => [
-							'state' => 'alpha',
-							'description' => '2.3 Release. See <a href="https://trello.com/b/JhpYYzpE/podlove-publisher-development">Trello</a> for development status.'
+						'release-2-3-2' => [
+							'state' => 'patch',
+							'description' => 'Minor changes following the 2.3 Release.'
 						]
 					]
 				]
