@@ -19,7 +19,7 @@ class Config {
 					'title' => 'Podlove Podcast Publisher',
 					'file'  => 'podlove-podcasting-plugin-for-wordpress/podlove.php',
 					'branches' => [
-						'release-2-3-3' => [
+						'release-2-3-8' => [
 							'state' => 'patch',
 							'description' => 'Minor changes following the 2.3 Release.'
 						]
