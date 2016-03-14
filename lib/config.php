@@ -8,7 +8,27 @@ class Config {
 
 		if (false === ($config = get_transient('podlove_beta_config'))) {
 			
-			$config = wp_remote_fopen("https://eric.co.de/releases/config.json");
+			// $config = wp_remote_fopen("https://eric.co.de/releases/config.json");
+
+			$uri = "https://eric.co.de/releases/config.json";
+			// BEGIN wp_remote_fopen
+			$parsed_url = @parse_url( $uri );
+			
+			if ( !$parsed_url || !is_array( $parsed_url ) )
+			        return false;
+			
+			$options = array();
+			$options['timeout'] = 10;
+			$options['sslverify'] = false;
+			
+			$response = wp_safe_remote_get( $uri, $options );
+			
+			if (is_wp_error($response)) {
+				return false;
+			}
+			
+			$config = wp_remote_retrieve_body( $response );
+			// END wp_remote_fopen
 
 			if ($config === false) {
 				$config = [];
