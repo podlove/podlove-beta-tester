@@ -122,12 +122,11 @@ function handle_settings_request() {
 	$action = filter_input(INPUT_GET, 'action');
 	$plugin = filter_input(INPUT_GET, 'plugin');
 
-	if (!$action || !$plugin)
+	if (!$action)
 		return;
 
 	switch ($action) {
 		case 'switch_branch':
-
 			if (!$branch = filter_input(INPUT_GET, 'branch'))
 				return;
 
@@ -139,6 +138,11 @@ function handle_settings_request() {
 			do_action('podlove_beta_before_leave_branch', $plugin);
 			do_action('podlove_beta_leave_branch',        $plugin);
 			do_action('podlove_beta_after_leave_branch',  $plugin);
+			break;
+		case 'reload_config';
+			$x = delete_transient('podlove_beta_config');
+			wp_redirect(settings_url());
+			exit;
 			break;
 		default:
 			return;
@@ -219,6 +223,10 @@ function settings_page() {
 				<?php endforeach ?>
 			</div>			
 		<?php endforeach ?>
+
+		<p>
+			<small><a href="<?php echo reload_config_url() ?>">Check if new beta branches are available</a></small>
+		</p>
 	</div>
 	<?php
 }
@@ -243,6 +251,10 @@ function leave_branch_link($plugin) {
  */
 function leave_branch_url($plugin) {
 	return add_query_arg(['action' => 'leave_branch', 'plugin' => $plugin], settings_url());
+}
+
+function reload_config_url() {
+	return add_query_arg(['action' => 'reload_config'], settings_url());
 }
 
 /**
