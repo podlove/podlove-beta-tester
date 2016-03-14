@@ -12,16 +12,16 @@ class Plugin {
 
 	public function __construct($slug, $data) {
 		$this->slug  = $slug;
-		$this->title = $data['title'];
-		$this->file  = $data['file'];
-		$this->hidden = isset($data['hidden']) ? (bool) $data['hidden'] : false;
+		$this->title = $data->title;
+		$this->file  = $data->file;
+		$this->hidden = isset($data->hidden) ? (bool) $data->hidden : false;
 
 		$this->branches = [];
-		foreach ($data['branches'] as $branch_slug => $branch) {
+		foreach ($data->branches as $branch_slug => $branch) {
 			$this->branches[] = new Branch(
 				$branch_slug, 
-				isset($branch['state'])       ? $branch['state']       : 'alpha', 
-				isset($branch['description']) ? $branch['description'] : ''
+				isset($branch->state)       ? $branch->state       : 'alpha', 
+				isset($branch->description) ? $branch->description : ''
 			);
 		}
 	}

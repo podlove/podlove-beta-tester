@@ -14,6 +14,10 @@ This plugin is not available through the WordPress plugin directory. You need to
 
 Once you have the plugin installed and active, it will receive updates normally. The only difference being that the updates are served by us instead of WordPress. But the user experience is identical.
 
+## Maintenance
+
+Available beta branches are defined at `https://eric.co.de/releases/config.json`.
+
 ## Directory Structure
 
 ```
