@@ -69,7 +69,7 @@ function podlove_beta_setup_plugin_update_server() {
 
 			PucFactory::buildUpdateChecker($update_url, $plugin->absolute_file_path());
 		} else {
-			// error_log(print_r("Plugin {$plugin->file} not active", true));
+			error_log(print_r("Podlove Beta Error: Plugin {$plugin->file} not active", true));
 		}
 	}
 }
