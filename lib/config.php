@@ -5,6 +5,7 @@ class Config {
 
 	public static function data()
 	{
+		$empty_data = ((object) ['plugins' => []]);
 
 		if (false === ($config = get_transient('podlove_beta_config'))) {
 			
@@ -15,7 +16,7 @@ class Config {
 			$parsed_url = @parse_url( $uri );
 			
 			if ( !$parsed_url || !is_array( $parsed_url ) )
-			        return false;
+			        return $empty_data;
 			
 			$options = array();
 			$options['timeout'] = 10;
@@ -24,14 +25,15 @@ class Config {
 			$response = wp_safe_remote_get( $uri, $options );
 			
 			if (is_wp_error($response)) {
-				return false;
+				error_log(print_r($response->get_error_message() . ' in ' . __FILE__ . ' line ' . __LINE__, true));
+				return $empty_data;
 			}
 			
 			$config = wp_remote_retrieve_body( $response );
 			// END wp_remote_fopen
 
 			if ($config === false) {
-				$config = [];
+				$config = $empty_data;
 			} else {
 				$config = json_decode($config);
 			}
