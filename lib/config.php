@@ -19,7 +19,7 @@ class Config {
 			
 			$options = array();
 			$options['timeout'] = 10;
-			$options['sslverify'] = false;
+			$options['sslverify'] = true;
 			
 			$response = wp_safe_remote_get( $uri, $options );
 			
