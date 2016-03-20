@@ -3,7 +3,7 @@
  * Plugin Name: Podlove Beta Tester
  * Plugin URI:  http://podlove.org
  * Description: Get plugin updates for Podlove plugins before they are stable. Supported plugins: Podlove Publisher
- * Version:     1.1.1
+ * Version:     1.1.2
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT

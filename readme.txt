@@ -31,6 +31,10 @@ Once you have the plugin installed and active, it will receive updates normally.
 
 == Changelog ==
 
+= 1.1.2 =
+
+* fix certificates
+
 = 1.1.1 =
 
 * add some error handling
