@@ -31,6 +31,18 @@ Once you have the plugin installed and active, it will receive updates normally.
 
 == Changelog ==
 
+= 1.1.2 =
+
+* fix certificates
+
+= 1.1.1 =
+
+* add some error handling
+
+= 1.1.0 =
+
+* read config from remote url
+
 = 1.0.2 =
 
 * use custom certificates for *all* requests against eric.co.de

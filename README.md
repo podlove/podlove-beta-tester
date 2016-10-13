@@ -20,3 +20,7 @@ Once you have the plugin installed and active, it will receive updates normally.
 To leave a beta, go to `Settings > Podlove Beta Tester` and "Switch back to stable Version". This restores your last stable version.
 
 If this does not work, deactivate/uninstall the "Podlove Beta Tester" plugin and remove the files of the plugin which tracked the beta branch. Then upload the original files from [wordpress.org/plugins](https://wordpress.org/plugins/).
+
+## Maintenance
+
+Available beta branches are defined at `https://eric.co.de/releases/config.json`.
