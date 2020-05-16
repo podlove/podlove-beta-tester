@@ -31,6 +31,10 @@ Once you have the plugin installed and active, it will receive updates normally.
 
 == Changelog ==
 
+= 2.0.0 =
+
+Use GitHub Releases to manage plugin beta releases.
+
 = 1.1.2 =
 
 * fix certificates
