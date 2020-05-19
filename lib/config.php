@@ -22,13 +22,13 @@ class Config
 {
     "plugins": {
         "podlove-podcasting-plugin-for-wordpress": {
-					  "github": "podlove/podlove-publisher",
+			"github": "podlove/podlove-publisher",
             "title": "Podlove Podcast Publisher",
             "file" : "podlove-podcasting-plugin-for-wordpress/podlove.php",
             "branches": {
-                "shownotes-module": {
-                    "state": "alpha",
-                    "description": "Shownotes Module"
+                "beta": {
+                    "state": "beta",
+                    "description": "Work in progress of the next release"
                 }
             }
         }
